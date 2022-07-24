@@ -73,7 +73,12 @@ class Video(Resource):
         return result
     @marshal_with(resource_fields)
     def delete(self, video_id):
-        pass
+        q = input(f"Are you sure you want to delete Video: {video_id}? Y/N")
+        if q.lower() == 'y':
+            VideoModel.query.filter_by(id=video_id).delete()
+            db.session.commit()
+        else:
+            print(f"Video {video_id} not deleted")
     
 api.add_resource(Video, "/video/<int:video_id>")
 
