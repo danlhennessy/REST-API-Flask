@@ -57,6 +57,7 @@ class Video(Resource):
         db.session.add(video) # Adds object to DB session
         db.session.commit() # Commits session to DB
         return video, 201
+    @marshal_with(resource_fields)
     def patch(self, video_id):
         args = video_update_args.parse_args()
         result = VideoModel.query.filter_by(id=video_id).first()
@@ -68,6 +69,9 @@ class Video(Resource):
             result.views = args['views']
         if args['likes']:
             result.likes = args['likes']
+        db.session.commit()
+        return result
+    @marshal_with(resource_fields)
     def delete(self, video_id):
         pass
     
