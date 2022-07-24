@@ -1,8 +1,11 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse, abort
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 api = Api(app)
+app.config['SQLALCHEMY_DATABASE_URL'] = 'sqlite:///database.db'
+dv = SQLAlchemy(app)
 
 video_put_args = reqparse.RequestParser()
 video_put_args.add_argument("name", type=str, help="Name of video missing", required=True)
