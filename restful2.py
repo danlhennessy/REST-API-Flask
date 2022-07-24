@@ -1,5 +1,5 @@
 from flask import Flask, request
-from flask_restful import Resource, Api, reqparse, abort
+from flask_restful import Resource, Api, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -32,15 +32,21 @@ def abortexisting(video_id):
     if video_id in videos:
         abort(409, message="Vid already exists with that ID..")
 '''
+
+resource_fields = {'id' : fields.Integer, 'name' : fields.String, 'views' : fields.Integer, 'likes' : fields.Integer}
+
 class Video(Resource):
+    @marshal_with(resource_fields)
     def get(self, video_id):
-        abortvid(video_id)
-        return videos[video_id]
+        result = VideoModel.query.get.filter_by(id=video_id).first()
+        return result
+    @marshal_with(resource_fields)
     def put(self, video_id):
-        abortexisting(video_id)
-        args = video_put_args.parse_args() #Brings in args from video_put_args defined above
-        videos[video_id] = args
-        return videos[video_id], 201
+        args = video_put_args.parse_args()
+        video = VideoModel(id=video_id, name = args['name'], views = args['views'], likes = args['likes']) # Creates object of class VideoModel using provided args + video_id
+        db.session.add(video) # Adds object to DB session
+        db.session.commit() # Commits session to DB
+        return video, 201
     def delete(self, video_id):
         abortvid(video_id)
         del videos[video_id]
