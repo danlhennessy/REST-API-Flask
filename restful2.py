@@ -23,6 +23,11 @@ video_put_args.add_argument("name", type=str, help="Name of video missing", requ
 video_put_args.add_argument("views", type=int, help="Views of video missing", required=True)
 video_put_args.add_argument("likes", type=int, help="Likes on video missing", required=True)
 
+video_update_args = reqparse.RequestParser()
+video_update_args.add_argument("name", type=str, help="Name of video missing")
+video_update_args.add_argument("views", type=int, help="Views of video missing")
+video_update_args.add_argument("likes", type=int, help="Likes on video missing")
+
 ''' Abort Funcs No Longer needed since DB inclusion
 def abortvid(video_id):
     if video_id not in videos:
@@ -52,10 +57,19 @@ class Video(Resource):
         db.session.add(video) # Adds object to DB session
         db.session.commit() # Commits session to DB
         return video, 201
+    def patch(self, video_id):
+        args = video_update_args.parse_args()
+        result = VideoModel.query.filter_by(id=video_id).first()
+        if not result:
+            abort(404, message='Video does not exist')
+        if args['name']:
+            result.name = args['name']
+        if args['views']:
+            result.views = args['views']
+        if args['likes']:
+            result.likes = args['likes']
     def delete(self, video_id):
-        abortvid(video_id)
-        del videos[video_id]
-        return "", 204
+        pass
     
 api.add_resource(Video, "/video/<int:video_id>")
 
