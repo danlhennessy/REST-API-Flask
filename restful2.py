@@ -38,11 +38,14 @@ resource_fields = {'id' : fields.Integer, 'name' : fields.String, 'views' : fiel
 class Video(Resource):
     @marshal_with(resource_fields)
     def get(self, video_id):
-        result = VideoModel.query.get.filter_by(id=video_id).first()
+        result = VideoModel.query.filter_by(id=video_id).first()
         return result
     @marshal_with(resource_fields)
     def put(self, video_id):
         args = video_put_args.parse_args()
+        result = VideoModel.query.filter_by(id=video_id).first()
+        if result:
+            abort(409, message="Video ID already exists")
         video = VideoModel(id=video_id, name = args['name'], views = args['views'], likes = args['likes']) # Creates object of class VideoModel using provided args + video_id
         db.session.add(video) # Adds object to DB session
         db.session.commit() # Commits session to DB
