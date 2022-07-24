@@ -23,7 +23,7 @@ video_put_args.add_argument("name", type=str, help="Name of video missing", requ
 video_put_args.add_argument("views", type=int, help="Views of video missing", required=True)
 video_put_args.add_argument("likes", type=int, help="Likes on video missing", required=True)
 
-''' Abort No Longer needed since DB inclusion
+''' Abort Funcs No Longer needed since DB inclusion
 def abortvid(video_id):
     if video_id not in videos:
         abort(404, message="Video does not exist..")
@@ -39,6 +39,8 @@ class Video(Resource):
     @marshal_with(resource_fields)
     def get(self, video_id):
         result = VideoModel.query.filter_by(id=video_id).first()
+        if not result:
+            abort(404, message="Could not find this Video ID")
         return result
     @marshal_with(resource_fields)
     def put(self, video_id):
