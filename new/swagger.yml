@@ -12,6 +12,18 @@ basePath: "/api"
 
 # Paths supported by the server application
 paths:
+  /dan:
+    get:
+      operationId: "dan.data"
+      tags:
+        - "dan"
+      summary: "Test data"
+      description: "Display the test data"
+      responses:
+        200:
+          description: "Successful read people list operation"          
+          schema:
+            type: "array"
   /people:
     get:
       operationId: "people.read"
