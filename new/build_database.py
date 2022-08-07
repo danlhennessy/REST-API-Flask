@@ -21,4 +21,4 @@ for person in PEOPLE:
     p = Person(lname=person['lname'], fname=person['fname'])
     db.session.add(p)
 
-db.session.commit()
+db.session.commit()  # Data only added to db from session when running commit()
