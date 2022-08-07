@@ -1,0 +1,25 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+paths:
+  /data:
+    get:
+      operationId: "data.display_all"
+      tags:
+        - "data"
+      summary: "Example data"
+      description: "Display the example data"
+      responses:
+        200:
+          description: "Successful display data operation"          
+          schema:
+            type: "array"
