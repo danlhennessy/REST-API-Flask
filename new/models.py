@@ -8,7 +8,7 @@ class Person(db.Model):
     fname = db.Column(db.String(32))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-class PersonSchema(ma.ModelSchema):
+class PersonSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Person
-        sqla_session = db.session
+        load_instance = True
